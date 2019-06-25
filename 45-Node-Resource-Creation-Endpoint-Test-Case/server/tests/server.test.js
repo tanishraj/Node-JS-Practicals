@@ -23,15 +23,28 @@ describe('POST /todos', () => {
 		})
 		.end((err, res) => {
 			if(err) return done(err);
-		})
 
-		toDo.find().then((todos) => {
-			console.log(`Total number of records in todos list: ${todos.length}`);
-			expect(todos.length).toBe(1);
-			expect(todos[0].text).toBe(text);
-			done();
-		}).catch((e) => {
-			return done(e);
+			toDo.find().then((res) => {
+				console.log(`Total number of records in todos list: ${res[0].text}`);
+				expect(res.length).toBe(1);
+				expect(res[0].text).toBe(text);
+				done();
+			}).catch(e => done(e));
+		})
+	}),
+
+	it('Should not create todo with invalid body data.', (done) => {
+		request(app)
+		.post('/todos')
+		.send({})
+		.expect(400)
+		.end((err, res) => {
+			if(err) return done(err);
+
+			toDo.find().then(res => {
+				expect(res.length).toBe(0);
+				done();
+			}).catch(e => done(e));
 		})
 	})
 })
