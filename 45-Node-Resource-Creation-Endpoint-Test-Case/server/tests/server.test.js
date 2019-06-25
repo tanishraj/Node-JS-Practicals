@@ -2,10 +2,11 @@ const expect = require('expect');
 const request = require('supertest');
 
 const {app} = require('./../server');
-const {Todo} = require('./../models/todo');
+const {toDo} = require('./../models/todo');
 
 beforeEach((done) => {
-	Todo.remove({}).then(() => {
+	console.log("Removed All the todos.");
+	toDo.remove({}).then(() => {
 		done();
 	})
 })
@@ -24,12 +25,13 @@ describe('POST /todos', () => {
 			if(err) return done(err);
 		})
 
-		Todo.find().then((todos) => {
-			expect(todos.length).tobe(1);
+		toDo.find().then((todos) => {
+			console.log(`Total number of records in todos list: ${todos.length}`);
+			expect(todos.length).toBe(1);
 			expect(todos[0].text).toBe(text);
 			done();
 		}).catch((e) => {
-			done(e);
+			return done(e);
 		})
 	})
 })
